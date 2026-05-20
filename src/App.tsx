@@ -285,7 +285,7 @@ export default function App() {
       
       {/* Main Display Area */}
       <div className="flex-1 w-full flex items-center justify-center my-4 min-h-0">
-        <div className="flex items-center justify-center bg-white w-full max-w-md aspect-square p-8 rounded-3xl shadow-sm border border-slate-100">
+        <div className="flex items-center justify-center bg-white w-full max-w-md aspect-square rounded-3xl shadow-sm border border-slate-100">
           <img 
             src={getImageSrc()} 
             alt={displayItem}
