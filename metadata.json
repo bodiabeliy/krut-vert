@@ -1,0 +1,8 @@
+{
+  "name": "Круть-верть!",
+  "description": "Додаток, який показує випадкову стрілку (вліво або вправо) з випадковим інтервалом 3-5 секунд.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
