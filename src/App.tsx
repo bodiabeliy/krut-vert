@@ -5,17 +5,16 @@
 
 import {React, useState, useEffect, useCallback, useRef } from 'react';
 import { Play, Square } from 'lucide-react';
-import { log } from 'console';
 
 // Image cache for preloading
 const IMAGE_CACHE: Record<string, boolean> = {};
 
 const preloadImages = async () => {
   const imageSources = [
-    '/left longer.png',
-    '/right longer.png',
-    '/nose.png',
-    '/clap.jpg',
+    '/left longer.webp',
+    '/right longer.webp',
+    '/nose.webp',
+    '/clap.webp',
   ];
 
   return Promise.all(
@@ -181,10 +180,10 @@ export default function App() {
   }, [isImageLoaded, isRunning, scheduleNextChange]);
 
   const getImageSrc = () => {
-    if (displayItem === 'left') return '/left longer.png';
-    if (displayItem === 'right') return '/right longer.png';
-    if (displayItem === 'nose') return '/nose.png';
-    return '/clap.jpg';
+    if (displayItem === 'left') return '/left longer.webp';
+    if (displayItem === 'right') return '/right longer.webp';
+    if (displayItem === 'nose') return '/nose.webp';
+    return '/clap.webp';
   };
 
   const getSubTitle = () => {
