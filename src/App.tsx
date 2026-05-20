@@ -195,7 +195,7 @@ export default function App() {
   return (
     <div className="w-full flex flex-col items-center justify-between p-4 sm:p-8 overflow-hidden">
       {/* Invitation Modal */}
-      {showModal && !isInvited && (
+    {showModal && !isInvited && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white rounded-3xl p-8 w-full max-w-sm shadow-xl">
             <h2 className="text-2xl font-bold text-[#0c325d] mb-2">Код доступу</h2>
@@ -241,9 +241,21 @@ export default function App() {
                 </button>
               </div>
             </form>
+
+            <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+              <p className="text-sm text-slate-500 mb-1">Немає коду доступу?</p>
+              <button 
+                type="button"
+                className="text-[#52b8fb] font-bold text-sm hover:text-[#0c325d] transition-colors hover:underline"
+                // onClick={() => alert("Інтеграція платіжної системи (Stripe, Przelewy24 чи Blik) для оплати 10 PLN")}
+              >
+                Придбати повний доступ за 20 PLN
+              </button>
+            </div>
           </div>
         </div>
       )}
+
 
       {/* Header */}
       <div className="text-center space-y-2 flex-shrink-0">
