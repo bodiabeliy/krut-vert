@@ -7,11 +7,42 @@ import {React, useState, useEffect, useCallback, useRef } from 'react';
 import { Play, Square } from 'lucide-react';
 import { log } from 'console';
 
+// Image cache for preloading
+const IMAGE_CACHE: Record<string, boolean> = {};
+
+const preloadImages = async () => {
+  const imageSources = [
+    '/left longer.png',
+    '/right longer.png',
+    '/nose.png',
+    '/clap.jpg',
+  ];
+
+  return Promise.all(
+    imageSources.map(
+      src =>
+        new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            IMAGE_CACHE[src] = true;
+            resolve(true);
+          };
+          img.onerror = () => {
+            IMAGE_CACHE[src] = false;
+            resolve(false);
+          };
+          img.src = src;
+        })
+    )
+  );
+};
+
 export default function App() {
   const [isRunning, setIsRunning] = useState(false);
   const [displayItem, setDisplayItem] = useState<'left' | 'right' | 'clap' | 'nose'>('right');
   const [level, setLevel] = useState<1 | 2 | 3>(1);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const [isInvited, setIsInvited] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -19,6 +50,11 @@ export default function App() {
   const [inviteCode, setInviteCode] = useState('');
   const [inviteError, setInviteError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Preload images on component mount
+  useEffect(() => {
+    preloadImages();
+  }, []);
 
   useEffect(() => {
     const code = localStorage.getItem('invitationCode');
@@ -91,6 +127,9 @@ export default function App() {
     const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1) + minDelay);
     
     timeoutRef.current = setTimeout(() => {
+      // Reset image loaded state to trigger onLoad on new image
+      setIsImageLoaded(false);
+      
       setDisplayItem(prev => {
          const options: Array<'left' | 'right' | 'clap' | 'nose'> = ['left', 'right'];
          if (level === 2 || level === 3) {
@@ -105,7 +144,6 @@ export default function App() {
          } while (nextItem === prev && options.length > 1);
          return nextItem;
       }); 
-      scheduleNextChange();
     }, randomDelay);
   }, [level]);
 
@@ -129,9 +167,18 @@ export default function App() {
   useEffect(() => {
     if (isRunning) {
        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+       // Reset image loaded and schedule next change
+       setIsImageLoaded(false);
        scheduleNextChange();
     }
   }, [level, isRunning, scheduleNextChange]);
+
+  // Schedule next change when image is loaded (not before)
+  useEffect(() => {
+    if (isRunning && isImageLoaded) {
+      scheduleNextChange();
+    }
+  }, [isImageLoaded, isRunning, scheduleNextChange]);
 
   const getImageSrc = () => {
     if (displayItem === 'left') return '/left longer.png';
@@ -244,6 +291,11 @@ export default function App() {
             src={getImageSrc()} 
             alt={displayItem}
             className="w-full h-full object-contain"
+            onLoad={() => {
+              if (isRunning) {
+                setIsImageLoaded(true);
+              }
+            }}
           />
         </div>
       </div>
